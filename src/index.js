@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const databaseService = require('./databaseService');
 
 // defining the Express app
 const app = express();
@@ -92,16 +93,39 @@ app.delete('/api/item/:id', (req, res) =>{
 //SUPPLIER ENDPOINTS
 app.get('/api/supplier/:param?', (req, res) => {
   let parameter = req.params.param;
+  //console.log(parameter)
 
-  if(databaseService.SupplierExistsById(parameter)) {
-    res.send("DatabaseService.GetSupplierById(parameter)");
-  } 
-  else if(databaseService.SupplierExistsByName(parameter)) {
+  databaseService.SupplierExistsById(parameter)
+    .then((data) => {
+      //console.log(data);
+      res.send(data);
+    })
+    .catch((error) => {
+      console.error(error);
+      databaseService.SupplierExistsByName(parameter)
+        .then((data) => {
+          //console.log(data);
+          res.send(data);
+        })
+        .catch((error) => {
+          console.error(error);
+          databaseService.GetAllSuppliers()
+            .then((data) => {
+              //console.log(data);
+              res.send(data);
+            })
+            .catch((error) => {
+              console.error("-> Database is empty...");
+              res.status(404).send(["Database is empty..."]);
+            });
+        });
+    });
+  /*if(databaseService.SupplierExistsByName(parameter)) {
     res.send("DatabaseService.GetSupplierByName(parameter)");
   }
   else {
     res.send("DatabaseService.GetAllSuppliers()");
-  } 
+  } */
 });
 
 app.post('/api/supplier', (req, res) => {
