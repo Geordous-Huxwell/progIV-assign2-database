@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const databaseService = require('./databaseService');
 
 const databaseService = require('./databaseService');
 //import * as databaseService from './databaseService';
