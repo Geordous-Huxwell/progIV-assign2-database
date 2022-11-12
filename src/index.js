@@ -139,24 +139,30 @@ app.post('/api/supplier', (req, res) => {
     id: req.body.id,
     name: req.body.name,
     address: req.body.address,
-    contact: supplierContact,
+    contact: supplierContact
   }
 
-  if(databaseService.AddSupplier(supplier)) {
-    res.status(200).send("Supplier added.");
-  }
-  else {
-    res.status(500).send("Error adding supplier.");
-  }
+  databaseService.AddSupplier(supplier)
+    .then((data) => {
+      console.log(data);
+      res.status(200).send("Supplier added successfully.");
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error adding supplier.");
+    });
 });
 
 app.delete('/api/supplier/:id', (req, res) =>{
   let id = req.body.id;
 
-  if(databaseService.DeleteSupplier(id)) {
-    res.status(200).send("Supplier deleted successfully.");
-  }
-  else {
-    res.status(500).send("Error deleting supplier.");
-  }
+  databaseService.DeleteSupplier(id)
+    .then((data) => {
+      console.log(data);
+      res.status(200).send("Supplier deleted successfully.");
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error deleting supplier.");
+    });
 });

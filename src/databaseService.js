@@ -3,17 +3,10 @@ const database = new sqlite3.Database('./src/backend_database.db', (err) => {
   console.log(err ? err.message : "Connected to database!");
 });
 /**Dummy Data...*/
-/*
-let sql = `SELECT * FROM sqlite_master;`
-console.log("aa")
-database.each(sql, [], (err, row) => {
-    console.log(`${row.name}`)
-});
-console.log("bb")
-*/
-database.run(`INSERT OR IGNORE INTO supplier(id, name, address, contact) VALUES (?, ?, ?, ?)`, [1, "Jeff", "123 Happy Street", "Do Not Contact"], function(err) {
-  console.log(err ? err.message : "Added Supplier row ${this.lastID} to dattabase!");
-});
+
+//database.run(`INSERT OR IGNORE INTO supplier(id, name, address, contact) VALUES (?, ?, ?, ?)`, [1, "Jeff", "123 Happy Street", "Do Not Contact"], function(err) {
+//  console.log(err ? err.message : "Added Supplier row ${this.lastID} to dattabase!");
+//});
 
 /**Code goes here!*/
 
@@ -61,6 +54,22 @@ async function GetAllSuppliers() {
   return runQuery(sql, [])
 }
 
+async function AddSupplier(supplier) {
+  let sql = `INSERT OR IGNORE INTO supplier(Id id,
+                      Name name,
+                      Address address,
+                      Contact contact)
+              VALUES (?, ?, ?, ?)`;
+
+  return runChange(sql, [supplier.id, supplier.name, supplier.address, supplier.contact])
+}
+
+async function DeleteSupplier(supplierId) {
+  let sql = `DELETE FROM supplier WHERE id=(?)`;
+
+  return runChange(sql, [supplierId])
+}
+
 async function runQuery(sql, input) {
   return new Promise((res, rej) => {
     database.all(sql, input, (err, rows) => {
@@ -79,10 +88,21 @@ async function runQuery(sql, input) {
   });
 };
 
+async function runChange(sql, input) {
+  return new Promise((res, rej) => {
+    database.run(sql, input, function(err) {
+      if (err) {
+        rej(err);
+      }
+      res("Database updated!");
+    });
+  });
+}
 
-database.run(`DELETE FROM supplier WHERE id = 1`, [], function(err) {
-    console.log(err ? err.message : "Removed temp Supplier!");
-});
+
+//database.run(`DELETE FROM supplier WHERE id = 1`, [], function(err) {
+//    console.log(err ? err.message : "Removed temp Supplier!");
+//});
 
 
 /**Code stops here!*/
@@ -90,4 +110,4 @@ database.run(`DELETE FROM supplier WHERE id = 1`, [], function(err) {
 //    console.log(err ? err.message : "Closed database!");
 //});
 
-module.exports = { SupplierExistsById, SupplierExistsByName, GetAllSuppliers }
+module.exports = { SupplierExistsById, SupplierExistsByName, GetAllSuppliers, AddSupplier, DeleteSupplier }
