@@ -5,7 +5,6 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const databaseService = require('./databaseService');
 
-const databaseService = require('./databaseService');
 //import * as databaseService from './databaseService';
 
 // defining the Express app
@@ -133,6 +132,8 @@ app.get('/api/supplier/:param?', (req, res) => {
 
 app.post('/api/supplier', (req, res) => {
   let supplierContact = req.body.contact;
+
+  console.log(req.body);
 
   if(supplierContact == undefined) supplierContact = "";
 
