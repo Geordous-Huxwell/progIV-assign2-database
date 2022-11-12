@@ -55,19 +55,22 @@ async function GetAllSuppliers() {
 }
 
 async function AddSupplier(supplier) {
-  let sql = `INSERT OR IGNORE INTO supplier(Id id,
-                      Name name,
-                      Address address,
-                      Contact contact)
+  if(parseInt(supplier.id) == NaN) {
+    return new Promise((res, rej) => { rej("-> Provided Id is not a number.") });
+  }
+  let sql = `INSERT OR IGNORE INTO supplier(id,
+                      name,
+                      address,
+                      contact)
               VALUES (?, ?, ?, ?)`;
 
-  return runChange(sql, [supplier.id, supplier.name, supplier.address, supplier.contact])
+  return runChange(sql, [parseInt(supplier.id), supplier.name, supplier.address, supplier.contact])
 }
 
 async function DeleteSupplier(supplierId) {
-  let sql = `DELETE FROM supplier WHERE id=(?)`;
+  let sql = `DELETE FROM supplier WHERE id=${supplierId}`;
 
-  return runChange(sql, [supplierId])
+  return runChange(sql, [])
 }
 
 async function runQuery(sql, input) {

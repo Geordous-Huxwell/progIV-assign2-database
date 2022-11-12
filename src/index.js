@@ -156,7 +156,7 @@ app.post('/api/supplier', (req, res) => {
 });
 
 app.delete('/api/supplier/:id', (req, res) =>{
-  let id = req.body.id;
+  let id = req.params.id;
 
   databaseService.DeleteSupplier(id)
     .then((data) => {
