@@ -59,8 +59,18 @@ async function GetAllItems() {
 
 async function AddItem(item) {
     if (parseInt(item.id) == NaN) {
-        return new Promise((res, rej) => { rej("-> Provided Id is not a number.") });
+      return new Promise((res, rej) => { rej("-> Provided Id is not a number.") });
+    } else if (parseFloat(item.price) == NaN) {
+      return new Promise((res, rej) => { rej("-> Provided Price is not a decimal value.") });
+    } else if (parseInt(item.quantity) == NaN) {
+      return new Promise((res, rej) => { rej("-> Provided Quantity is not a number.") });
+    } else if (parseInt(item.supplier_id) == NaN) {
+      return new Promise((res, rej) => { rej("-> Provided SupplierId is not a number.") });
     }
+
+    SupplierExistsById(item.supplierId)
+
+
     let sql = `INSERT OR IGNORE INTO item(id,
                       name,
                       price,
@@ -68,7 +78,7 @@ async function AddItem(item) {
                       supplierId)
               VALUES (?, ?, ?, ?, ?)`;
 
-    return runChange(sql, [parseInt(item.id), item.name, item.price, item.quantity, item.supplier_id])
+    return runChange(sql, [parseInt(item.id), item.name, parseFloat(item.price), parseInt(item.quantity), parseInt(item.supplier_id)])
 }
 
 async function UpdateQuantity(itemId, quantity) {
