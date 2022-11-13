@@ -4,10 +4,10 @@ const database = new sqlite3.Database('./src/backend_database.db', (err) => {
 });
 /**Dummy Data...*/
 
-database.run(`INSERT OR IGNORE INTO supplier(id, name, address, contact) VALUES (?, ?, ?, ?)`, [1, "Jeff", "123 Happy Street", "Do Not Contact"],
-    function(err) {
-        console.log(err ? err.message : "Added Supplier row ${this.lastID} to dattabase!");
-    });
+//database.run(`INSERT OR IGNORE INTO supplier(id, name, address, contact) VALUES (?, ?, ?, ?)`, [1, "Jeff", "123 Happy Street", "Do Not Contact"],
+//    function(err) {
+//        console.log(err ? err.message : "Added Supplier row ${this.lastID} to dattabase!");
+//    });
 
 /**Code goes here!*/
 
