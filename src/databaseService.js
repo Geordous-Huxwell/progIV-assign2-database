@@ -19,7 +19,7 @@ async function ItemExistsById(id) {
                   Name name,
                   Price price,
                   Quantity quantity,
-                  Supplier_id supplier_id
+                  SupplierId supplierId
               FROM item
               WHERE Id = (?)
               ORDER BY Id`;
@@ -36,7 +36,7 @@ async function ItemExistsByName(name) {
                   Name name,
                   Price price,
                   Quantity quantity,
-                  Supplier_id supplier_id
+                  SupplierId supplierId
               FROM item
               WHERE Name = (?)
               ORDER BY Id`;
@@ -50,7 +50,7 @@ async function GetAllItems() {
                 Name name,
                 Price price,
                 Quantity quantity,
-                Supplier_id supplier_id
+                SupplierId supplierId
             FROM item
             ORDER BY Id`;
 
@@ -65,7 +65,7 @@ async function AddItem(item) {
                       name,
                       price,
                       quantity,
-                      supplier_id)
+                      supplierId)
               VALUES (?, ?, ?, ?, ?)`;
 
     return runChange(sql, [parseInt(item.id), item.name, item.price, item.quantity, item.supplier_id])
