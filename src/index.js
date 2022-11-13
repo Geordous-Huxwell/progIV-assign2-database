@@ -104,7 +104,7 @@ app.put('/api/item', (req, res) => {
 });
 
 app.delete('/api/item/:id', (req, res) => {
-    let id = req.body.id;
+    let id = req.params.id;
 
     databaseService.DeleteItem(id)
         .then((data) => {
