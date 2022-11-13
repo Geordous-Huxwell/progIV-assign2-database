@@ -12,7 +12,7 @@ const database = new sqlite3.Database('./src/backend_database.db', (err) => {
 /**Code goes here!*/
 
 async function ItemExistsById(id) {
-    if (isNaN(id)) {
+    if (isNaN(parseInt(id))) {
         return new Promise((res, rej) => { rej("-> Not A Number!") });
     } else {
         let sql = `SELECT Id id,
@@ -64,27 +64,32 @@ async function AddItem(item) {
       return new Promise((res, rej) => { rej("-> Provided Price is not a decimal value.") });
     } else if (parseInt(item.quantity) == NaN) {
       return new Promise((res, rej) => { rej("-> Provided Quantity is not a number.") });
-    } else if (parseInt(item.supplier_id) == NaN) {
+    } else if (parseInt(item.supplierId) == NaN) {
       return new Promise((res, rej) => { rej("-> Provided SupplierId is not a number.") });
     }
 
-    SupplierExistsById(item.supplierId)
+    console.log(item.supplierId);
 
+    SupplierExistsById(parseInt(item.supplierId))
+      .then((data) => {
+        let sql = `INSERT OR IGNORE INTO item(id,
+                  name,
+                  price,
+                  quantity,
+                  supplierId)
+          VALUES (?, ?, ?, ?, ?)`;
 
-    let sql = `INSERT OR IGNORE INTO item(id,
-                      name,
-                      price,
-                      quantity,
-                      supplierId)
-              VALUES (?, ?, ?, ?, ?)`;
-
-    return runChange(sql, [parseInt(item.id), item.name, parseFloat(item.price), parseInt(item.quantity), parseInt(item.supplier_id)])
+        return runChange(sql, [parseInt(item.id), item.name, parseFloat(item.price), parseInt(item.quantity), parseInt(item.supplierId)]);
+      })
+      .catch((error) => {
+        return new Promise((res, rej) => { rej(`-> Provided SupplierId is not a valid supplier:\n\t${error}`) });
+      });
 }
 
 async function UpdateQuantity(itemId, quantity) {
-    if (parseInt(itemId) == NaN) {
+    if (isNaN(parseInt(itemId))) {
         return new Promise((res, rej) => { rej("-> Provided Id is not a number.") });
-    } else if (parseInt(quantity) == NaN) {
+    } else if (isNaN(parseInt(quantity))) {
         return new Promise((res, rej) => { rej("-> Provided quantity is not a number.") });
     }
 
@@ -103,6 +108,9 @@ async function DeleteItem(itemId) {
 }
 
 async function SupplierExistsById(id) {
+    console.log(id);
+    id = parseInt(id);
+    console.log(id);
     if (isNaN(id)) {
         return new Promise((res, rej) => { rej("-> Not A Number!") });
     } else {

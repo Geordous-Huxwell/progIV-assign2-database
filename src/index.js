@@ -67,6 +67,9 @@ app.get('/api/item/:param?', (req, res) => {
 });
 
 app.post('/api/item', (req, res) => {
+
+    console.log(req.body)
+
     let item = {
         id: req.body.id,
         name: req.body.name,
